@@ -1,5 +1,5 @@
 import { cleanText, readJson, requireMethod, sendJson } from "../lib/api-utils.js";
-import { extractProviderImage, getCreateEndpoint, getCreateHeaders } from "./provider-utils.js";
+import { extractProviderImage, getCandidateCreateEndpoints, getCreateEndpoint, getCreateHeaders } from "./provider-utils.js";
 
 function hashString(value) {
   let hash = 0;
@@ -84,9 +84,11 @@ export default async function handler(req, res) {
     return;
   }
 
-  const imageEndpoint = process.env.IMAGE_API_URL || process.env.CREATE_IMAGE_URL || getCreateEndpoint("/api/image");
+  const imageEndpoints = process.env.IMAGE_API_URL || process.env.CREATE_IMAGE_URL
+    ? [process.env.IMAGE_API_URL || process.env.CREATE_IMAGE_URL]
+    : getCandidateCreateEndpoints("image");
 
-  if (imageEndpoint) {
+  for (const imageEndpoint of imageEndpoints) {
     try {
       const headers = imageEndpoint.includes("create-pied.vercel.app") ? getCreateHeaders() : { "Content-Type": "application/json" };
       if (process.env.IMAGE_API_KEY) {
@@ -106,7 +108,7 @@ export default async function handler(req, res) {
         return;
       }
     } catch {
-      // Fall back to a generated SVG below.
+      // Try the next provider endpoint, then fall back to a generated SVG below.
     }
   }
 

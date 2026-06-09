@@ -1,5 +1,5 @@
 import { cleanText, readJson, requireMethod, sendJson } from "../lib/api-utils.js";
-import { extractProviderReply, getCreateEndpoint, getCreateHeaders, getCreateProviderBaseUrl } from "./provider-utils.js";
+import { extractProviderReply, getCandidateCreateEndpoints, getCreateHeaders, getCreateProviderBaseUrl } from "./provider-utils.js";
 
 const DEFAULT_MODEL = "create-pied";
 
@@ -25,47 +25,48 @@ export default async function handler(req, res) {
       `Be warm, clear, practical, imaginative, and safe. The active project is "${projectName}".`
   };
 
-  const endpoint = getCreateEndpoint("/api/chat");
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 60000);
 
   try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: getCreateHeaders(),
-      signal: controller.signal,
-      body: JSON.stringify({
-        model,
-        stream: false,
-        projectName,
-        friendlyMode: body.friendlyMode !== false,
-        safetyMode: body.safetyMode !== false,
-        messages: [system, ...messages],
-        prompt: messages[messages.length - 1]?.content || ""
-      })
-    });
-
-    const data = await response.json().catch(() => ({}));
-    const reply = extractProviderReply(data);
-
-    if (!response.ok || !reply) {
-      sendJson(res, 200, {
-        ok: false,
-        model,
-        provider: getCreateProviderBaseUrl(),
-        reply:
-          data.error ||
-          data.message ||
-          "Aurexis is powered by Create, but the Create provider did not return a chat reply. Check that create-pied exposes /api/chat."
+    let lastError = "";
+    for (const endpoint of getCandidateCreateEndpoints("chat")) {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: getCreateHeaders(),
+        signal: controller.signal,
+        body: JSON.stringify({
+          model,
+          stream: false,
+          projectName,
+          friendlyMode: body.friendlyMode !== false,
+          safetyMode: body.safetyMode !== false,
+          messages: [system, ...messages],
+          prompt: messages[messages.length - 1]?.content || ""
+        })
       });
-      return;
+
+      const data = await response.json().catch(() => ({}));
+      const reply = extractProviderReply(data);
+      if (response.ok && reply) {
+        sendJson(res, 200, {
+          ok: true,
+          model,
+          provider: getCreateProviderBaseUrl(),
+          reply
+        });
+        return;
+      }
+      lastError = data.error || data.message || `HTTP ${response.status}`;
     }
 
     sendJson(res, 200, {
-      ok: true,
+      ok: false,
       model,
       provider: getCreateProviderBaseUrl(),
-      reply
+      reply:
+        `Aurexis is linked to Create, but ${getCreateProviderBaseUrl()} does not expose a chat API I can use yet. ` +
+        `Ask the Create app owner for the chat API endpoint, or add it as CREATE_CHAT_ENDPOINT. Last check: ${lastError}`
     });
   } catch (error) {
     sendJson(res, 200, {

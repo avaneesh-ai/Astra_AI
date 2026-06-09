@@ -458,7 +458,7 @@ async function testProviderConnection() {
     const data = await response.json();
     result.className = `test-result ${data.ok ? "good" : "bad"}`;
     result.textContent = `${data.message} Provider: ${data.provider}.`;
-    $("#providerStatus").textContent = data.ok ? "Create connected" : "Create setup needed";
+    $("#providerStatus").textContent = data.ok ? "Create linked" : "Create setup needed";
     $("#providerStatus").classList.toggle("accent", !data.ok);
   } catch {
     result.className = "test-result bad";
@@ -653,7 +653,7 @@ async function sendChat(event) {
     });
     const data = await response.json();
     loading.content = data.reply || "I am here. Try sending that once more.";
-    $("#providerStatus").textContent = data.ok ? "Create connected" : "Create setup needed";
+    $("#providerStatus").textContent = data.ok ? "Create linked" : "Create setup needed";
     $("#providerStatus").classList.toggle("accent", !data.ok);
   } catch {
     loading.content = "I could not reach the chat service yet. The app is ready, but the connection needs to be available.";

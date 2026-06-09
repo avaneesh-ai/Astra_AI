@@ -209,6 +209,7 @@
                 <strong>Powered by Create</strong>
                 <p>Astra_AI is powered by this provider:</p>
                 <code>https://create-pied.vercel.app</code>
+                <code>CREATE_API_KEY = your Create AI key</code>
                 <code>CREATE_PROVIDER_URL = https://create-pied.vercel.app</code>
                 <button id="testProviderButton" class="ghost-button" type="button">Test Create connection</button>
                 <p id="providerTestResult" class="test-result"></p>
@@ -262,18 +263,23 @@
                 </div>
                 <div>
                   <strong>CREATE_API_KEY</strong>
-                  <span>Only if the provider needs a key</span>
+                  <span>Your Create AI API key</span>
+                </div>
+                <div>
+                  <strong>CREATE_CHAT_ENDPOINT</strong>
+                  <span>Only if Create gives an exact chat API URL</span>
                 </div>
                 <div>
                   <strong>CREATE_MODEL</strong>
-                  <span>create-pied</span>
+                  <span>Optional model name</span>
                 </div>
               </div>
               <ol class="step-list">
                 <li>Deploy Astra_AI to Vercel from GitHub.</li>
                 <li>Open Project Settings, then Environment Variables.</li>
                 <li>Add <code>CREATE_PROVIDER_URL</code> with <code>https://create-pied.vercel.app</code>.</li>
-                <li>Add <code>CREATE_API_KEY</code> only if that provider requires a key.</li>
+                <li>Add <code>CREATE_API_KEY</code> with your Create AI API key.</li>
+                <li>Add <code>CREATE_CHAT_ENDPOINT</code> only if Create shows you an exact API endpoint.</li>
                 <li>Redeploy the app, then click Test Create connection.</li>
               </ol>
             </div>

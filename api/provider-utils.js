@@ -20,11 +20,20 @@ export function getCreateEndpoint(path) {
   return `${getCreateProviderBaseUrl()}${cleanPath}`;
 }
 
+export function getCandidateCreateEndpoints(kind) {
+  const exactEndpoint = kind === "image" ? process.env.CREATE_IMAGE_ENDPOINT : process.env.CREATE_CHAT_ENDPOINT;
+  const exactEndpoints = exactEndpoint ? [cleanText(exactEndpoint, 500)] : [];
+  const chatPaths = ["/api/chat", "/api/generate", "/api/ai", "/api/message", "/api/create"];
+  const imagePaths = ["/api/image", "/api/images", "/api/generate-image", "/api/create-image"];
+  return [...exactEndpoints, ...(kind === "image" ? imagePaths : chatPaths).map((path) => getCreateEndpoint(path))];
+}
+
 export function getCreateHeaders() {
   const headers = { "Content-Type": "application/json" };
   const apiKey = process.env.CREATE_API_KEY || process.env.CREATE_PROVIDER_KEY;
   if (apiKey) {
     headers.Authorization = `Bearer ${apiKey}`;
+    headers["x-api-key"] = apiKey;
   }
   return headers;
 }

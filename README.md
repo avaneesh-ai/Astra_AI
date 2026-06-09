@@ -26,12 +26,13 @@ For the Create-powered version, add this in Vercel:
 
 ```txt
 CREATE_PROVIDER_URL=https://create-pied.vercel.app
+CREATE_API_KEY=your_create_ai_api_key
 ```
 
 Optional:
 
 ```txt
-CREATE_API_KEY=only_if_the_provider_requires_a_key
+CREATE_CHAT_ENDPOINT=only_if_create_gives_an_exact_chat_api_url
 CREATE_MODEL=create-pied
 PUBLIC_APP_URL=https://your-vercel-app.vercel.app
 RESEND_API_KEY=optional_for_real_email_links
@@ -41,6 +42,8 @@ IMAGE_API_KEY=optional_if_your_image_endpoint_requires_it
 ```
 
 If you do not set `CREATE_PROVIDER_URL`, Astra_AI automatically uses `https://create-pied.vercel.app`.
+
+Keep `CREATE_API_KEY` in Vercel Environment Variables. Do not paste it into chat or commit it to GitHub.
 
 ## Test The Provider
 
