@@ -1,4 +1,5 @@
 import { cleanText, readJson, requireMethod, sendJson } from "../lib/api-utils.js";
+import { extractProviderImage, getCreateEndpoint, getCreateHeaders } from "./provider-utils.js";
 
 function hashString(value) {
   let hash = 0;
@@ -83,11 +84,11 @@ export default async function handler(req, res) {
     return;
   }
 
-  const imageEndpoint = process.env.IMAGE_API_URL || process.env.OLLAMA_IMAGE_URL;
+  const imageEndpoint = process.env.IMAGE_API_URL || process.env.CREATE_IMAGE_URL || getCreateEndpoint("/api/image");
 
   if (imageEndpoint) {
     try {
-      const headers = { "Content-Type": "application/json" };
+      const headers = imageEndpoint.includes("create-pied.vercel.app") ? getCreateHeaders() : { "Content-Type": "application/json" };
       if (process.env.IMAGE_API_KEY) {
         headers.Authorization = `Bearer ${process.env.IMAGE_API_KEY}`;
       }
@@ -98,7 +99,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({ prompt, style, model })
       });
       const data = await response.json().catch(() => ({}));
-      const image = extractImage(data);
+      const image = extractProviderImage(data) || extractImage(data);
 
       if (response.ok && image) {
         sendJson(res, 200, { ok: true, image, source: "connected" });

@@ -1,49 +1,75 @@
 # Astra_AI
 
-Astra_AI is a Vercel-ready AI workspace with email-link registration, saved local sessions, an Ollama-powered chatbot named Aurexis, projects, image generation, co-work space, settings, subscription QR, and a laptop-only admin area.
+Astra_AI is a Vercel-ready AI workspace with email-link registration, saved local sessions, a friendly chatbot named Aurexis, projects, image generation, co-work space, settings, subscription QR, and a laptop-only admin area.
 
-## Run locally
+The app is powered by Create:
+
+```txt
+https://create-pied.vercel.app
+```
+
+## Run Locally
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:4173`.
+Open:
 
-## Vercel environment variables
+```txt
+http://localhost:4173
+```
 
-Add these in Vercel when you deploy:
+## Vercel Environment Variables
 
-```bash
-OLLAMA_BASE_URL=https://your-ollama-host.example.com
-OLLAMA_API_KEY=optional_if_your_host_requires_it
-OLLAMA_MODEL=llama3.1:8b
+For the Create-powered version, add this in Vercel:
+
+```txt
+CREATE_PROVIDER_URL=https://create-pied.vercel.app
+```
+
+Optional:
+
+```txt
+CREATE_API_KEY=only_if_the_provider_requires_a_key
+CREATE_MODEL=create-pied
+PUBLIC_APP_URL=https://your-vercel-app.vercel.app
 RESEND_API_KEY=optional_for_real_email_links
 LOGIN_FROM_EMAIL=Astra_AI <login@your-domain.com>
-PUBLIC_APP_URL=https://your-vercel-app.vercel.app
-IMAGE_API_URL=optional_text_to_image_endpoint
+IMAGE_API_URL=optional_custom_image_endpoint
 IMAGE_API_KEY=optional_if_your_image_endpoint_requires_it
 ```
 
-The app works without paid services in local demo mode. Real email delivery needs a mail provider such as Resend, and real image generation can be connected with `IMAGE_API_URL`. Without an image endpoint, Astra_AI creates a safe generated SVG artwork from the prompt.
+If you do not set `CREATE_PROVIDER_URL`, Astra_AI automatically uses `https://create-pied.vercel.app`.
 
-## Connect Ollama on Vercel
+## Test The Provider
 
-1. Push this project to GitHub.
-2. Import the repository into Vercel.
-3. Open the Vercel project, then go to Settings -> Environment Variables.
-4. Add `OLLAMA_BASE_URL` with your Ollama server URL. You can use either `https://your-ollama-host.example.com` or `https://your-ollama-host.example.com/api`.
-5. If you use Ollama Cloud, you can skip `OLLAMA_BASE_URL` and add only `OLLAMA_API_KEY`; Astra_AI will use `https://ollama.com`.
-6. Add `OLLAMA_API_KEY` only if your Ollama server or Ollama Cloud requires a secret key.
-7. Add `OLLAMA_MODEL`, for example `llama3.1:8b` for local Ollama or a cloud model from Ollama Cloud.
-8. Redeploy the Vercel project.
-9. Open Astra_AI, go to AI chatbot, choose an Ollama model, and chat with Aurexis.
+After deployment, open Settings in the app and click:
 
-## Use Projects
+```txt
+Test Create connection
+```
 
-1. Open the Project section from the left side.
-2. Create a project with a name and goal.
-3. Go to AI chatbot and choose that project in the project selector.
-4. Aurexis sends the active project name to Ollama so replies stay focused on that project.
+You can also open:
 
-Do not paste secret keys into chat. Keep secrets in Vercel environment variables.
+```txt
+https://YOUR-APP.vercel.app/api/provider-status
+```
+
+It should return JSON.
+
+## Deploy Notes
+
+Deploy the whole folder, not only `public`.
+
+Required files and folders:
+
+```txt
+api/
+lib/
+public/
+package.json
+vercel.json
+README.md
+server.mjs
+```

@@ -101,7 +101,7 @@
             <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme" aria-pressed="true">
               <span></span>
             </button>
-            <span id="ollamaStatus" class="status-pill">Ollama checking</span>
+            <span id="providerStatus" class="status-pill">Create checking</span>
             <span id="planStatus" class="status-pill accent">$25/year Pro</span>
           </div>
         </header>
@@ -205,6 +205,14 @@
           <div class="settings-grid">
             <div class="tool-panel">
               <h3>Astra_AI</h3>
+              <div class="setup-callout">
+                <strong>Powered by Create</strong>
+                <p>Astra_AI is powered by this provider:</p>
+                <code>https://create-pied.vercel.app</code>
+                <code>CREATE_PROVIDER_URL = https://create-pied.vercel.app</code>
+                <button id="testProviderButton" class="ghost-button" type="button">Test Create connection</button>
+                <p id="providerTestResult" class="test-result"></p>
+              </div>
               <div id="profileDetails" class="details-list"></div>
               <label>
                 Default model
@@ -246,14 +254,27 @@
             </div>
 
             <div class="tool-panel">
-              <h3>Ollama setup</h3>
+              <h3>Create provider setup</h3>
+              <div class="env-box" aria-label="Vercel environment variables">
+                <div>
+                  <strong>CREATE_PROVIDER_URL</strong>
+                  <span>https://create-pied.vercel.app</span>
+                </div>
+                <div>
+                  <strong>CREATE_API_KEY</strong>
+                  <span>Only if the provider needs a key</span>
+                </div>
+                <div>
+                  <strong>CREATE_MODEL</strong>
+                  <span>create-pied</span>
+                </div>
+              </div>
               <ol class="step-list">
                 <li>Deploy Astra_AI to Vercel from GitHub.</li>
                 <li>Open Project Settings, then Environment Variables.</li>
-                <li>Add <code>OLLAMA_BASE_URL</code> with your Ollama server URL.</li>
-                <li>Add <code>OLLAMA_API_KEY</code> only if your server requires a secret key.</li>
-                <li>Add <code>OLLAMA_MODEL</code>, for example <code>llama3.1:8b</code>.</li>
-                <li>Redeploy the app, then choose a model in AI chatbot.</li>
+                <li>Add <code>CREATE_PROVIDER_URL</code> with <code>https://create-pied.vercel.app</code>.</li>
+                <li>Add <code>CREATE_API_KEY</code> only if that provider requires a key.</li>
+                <li>Redeploy the app, then click Test Create connection.</li>
               </ol>
             </div>
 
@@ -263,7 +284,7 @@
                 <li>Create a project in the Project section.</li>
                 <li>Choose that project in the AI chatbot project selector.</li>
                 <li>Every reply will use the active project name and goal.</li>
-                <li>For faster project replies, use Pro and a stronger Ollama model.</li>
+                <li>Project chats are sent through the Create-powered provider.</li>
               </ol>
             </div>
 

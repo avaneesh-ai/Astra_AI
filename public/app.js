@@ -18,16 +18,10 @@ const pendingPrefix = "astra_ai_pending_";
 let autoLockTimer;
 
 const modelOptions = [
-  { id: "llama3.1:8b", name: "Llama 3.1 8B", note: "Balanced daily work" },
-  { id: "deepseek-r1:8b", name: "DeepSeek R1 8B", note: "Reasoning and planning" },
-  { id: "qwen3:8b", name: "Qwen3 8B", note: "Thinking and multilingual" },
-  { id: "qwen2.5:14b", name: "Qwen2.5 14B", note: "Long context writing" },
-  { id: "gemma3:12b", name: "Gemma 3 12B", note: "Capable single-GPU model" },
-  { id: "mistral:7b", name: "Mistral 7B", note: "Fast practical replies" },
-  { id: "llama3.2:3b", name: "Llama 3.2 3B", note: "Lightweight and quick" },
-  { id: "qwen2.5-coder:7b", name: "Qwen Coder 7B", note: "Code help" },
-  { id: "codellama:13b", name: "Code Llama 13B", note: "Programming projects" },
-  { id: "llava:7b", name: "LLaVA 7B", note: "Vision-ready workflows" }
+  { id: "create-pied", name: "Create Pied", note: "Default provider" },
+  { id: "create-fast", name: "Create Fast", note: "Quick replies" },
+  { id: "create-project", name: "Create Project", note: "Project-focused work" },
+  { id: "create-image", name: "Create Image", note: "Image prompt support" }
 ];
 
 const sectionMeta = {
@@ -40,7 +34,7 @@ const sectionMeta = {
 };
 
 const defaultSettings = {
-  defaultModel: "llama3.1:8b",
+  defaultModel: "create-pied",
   friendlyMode: true,
   voiceMode: false,
   safetyMode: true,
@@ -404,6 +398,7 @@ function bindApp() {
   $("#imageForm").addEventListener("submit", createImageFromForm);
   $("#coworkForm").addEventListener("submit", createCoworkNote);
   $("#voiceButton").addEventListener("click", startVoiceMode);
+  $("#testProviderButton").addEventListener("click", testProviderConnection);
 
   $("#saveSettingsButton").addEventListener("click", () => {
     state.settings.defaultModel = $("#defaultModelSelect").value;
@@ -448,6 +443,30 @@ function bindApp() {
       .forEach((key) => localStorage.removeItem(key));
     location.reload();
   });
+}
+
+async function testProviderConnection() {
+  const button = $("#testProviderButton");
+  const result = $("#providerTestResult");
+  button.disabled = true;
+  button.textContent = "Testing";
+  result.className = "test-result";
+  result.textContent = "Checking Create from this deployed app.";
+
+  try {
+    const response = await fetch("/api/provider-status");
+    const data = await response.json();
+    result.className = `test-result ${data.ok ? "good" : "bad"}`;
+    result.textContent = `${data.message} Provider: ${data.provider}.`;
+    $("#providerStatus").textContent = data.ok ? "Create connected" : "Create setup needed";
+    $("#providerStatus").classList.toggle("accent", !data.ok);
+  } catch {
+    result.className = "test-result bad";
+    result.textContent = "Could not run the Create test.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "Test Create connection";
+  }
 }
 
 function switchSection(section) {
@@ -634,12 +653,12 @@ async function sendChat(event) {
     });
     const data = await response.json();
     loading.content = data.reply || "I am here. Try sending that once more.";
-    $("#ollamaStatus").textContent = data.ok ? "Ollama connected" : "Ollama setup needed";
-    $("#ollamaStatus").classList.toggle("accent", !data.ok);
+    $("#providerStatus").textContent = data.ok ? "Create connected" : "Create setup needed";
+    $("#providerStatus").classList.toggle("accent", !data.ok);
   } catch {
     loading.content = "I could not reach the chat service yet. The app is ready, but the connection needs to be available.";
-    $("#ollamaStatus").textContent = "Ollama offline";
-    $("#ollamaStatus").classList.add("accent");
+    $("#providerStatus").textContent = "Create offline";
+    $("#providerStatus").classList.add("accent");
   }
 
   chat.updatedAt = new Date().toISOString();

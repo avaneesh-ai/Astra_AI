@@ -672,6 +672,85 @@ h3 {
   padding: 2px 6px;
 }
 
+.setup-callout {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(82, 229, 255, 0.34);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(82, 229, 255, 0.12), rgba(190, 118, 255, 0.12));
+  padding: 12px;
+}
+
+.setup-callout strong {
+  color: var(--ink);
+}
+
+.setup-callout p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.setup-callout code {
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-strong);
+  color: var(--ink);
+  padding: 4px 7px;
+  overflow-wrap: anywhere;
+}
+
+.test-result {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.test-result.good {
+  color: var(--green-2);
+}
+
+.test-result.bad {
+  color: var(--coral);
+}
+
+.env-box {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-strong);
+  padding: 12px;
+}
+
+.env-box div {
+  display: grid;
+  grid-template-columns: minmax(130px, 180px) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 9px;
+}
+
+.env-box div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.env-box strong {
+  color: var(--ink);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.env-box span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .stack-list {
   min-height: 72px;
   display: grid;

@@ -5,6 +5,7 @@ import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import chat from "./api/chat.js";
 import image from "./api/image.js";
+import providerStatus from "./api/provider-status.js";
 import sendLoginLink from "./api/send-login-link.js";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
@@ -14,6 +15,7 @@ const port = Number(process.env.PORT || 4173);
 const apiHandlers = {
   "/api/chat": chat,
   "/api/image": image,
+  "/api/provider-status": providerStatus,
   "/api/send-login-link": sendLoginLink
 };
 
